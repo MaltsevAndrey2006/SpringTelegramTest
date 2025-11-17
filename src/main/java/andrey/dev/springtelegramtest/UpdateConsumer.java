@@ -38,6 +38,6 @@ public class UpdateConsumer implements LongPollingSingleThreadUpdateConsumer {
     }
 
     private void sendMainMenu(Long chatId) {
-//затычка
+//затычка привет
     }
 }

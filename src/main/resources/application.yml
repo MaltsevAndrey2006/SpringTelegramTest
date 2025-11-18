@@ -1,3 +1,7 @@
 spring:
   application:
     name : SpringTelegramTest
+
+Telegram:
+  Bot:
+    Token: ${TELEGRAM_BOT_TOKEN}

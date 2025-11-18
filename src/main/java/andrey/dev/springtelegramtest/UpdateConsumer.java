@@ -12,8 +12,10 @@ import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardRow;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 
@@ -40,14 +42,29 @@ public class UpdateConsumer implements LongPollingSingleThreadUpdateConsumer {
             Long chatId = update.getMessage().getChatId();
             if (massageTest.equals("/start")) {
                 sendMainMenu(chatId);
+            } else if (massageTest.equals("/menu")) {
+                sendMenu(chatId);
+            } else if (massageTest.equals("рандомное")) {
+                sendRandom(chatId);
+            } else if (massageTest.equals("имя")) {
+                sendMyName(chatId, update.getCallbackQuery().getFrom());
             } else {
-                sendMessage(chatId, "я вас не понимаю. Вы можете  ввести команду /start ");
+                sendMessage(chatId, "я вас не понимаю. Вы можете  ввести команду /start или /menu ");
             }
         } else if (update.hasCallbackQuery()) {
             handleCallbackQuery(update.getCallbackQuery());
         }
 
 
+    }
+
+    @SneakyThrows
+    private void sendMenu(Long chatId) {
+        SendMessage message = SendMessage.builder().text("меню").chatId(chatId).build();
+        List<KeyboardRow> row = List.of(new KeyboardRow("рандомное", "имя"));
+        ReplyKeyboardMarkup murkUp = new ReplyKeyboardMarkup(row);
+        message.setReplyMarkup(murkUp);
+        telegramClient.execute(message);
     }
 
     private void handleCallbackQuery(CallbackQuery callbackQuery) {
